@@ -72,4 +72,11 @@ public class FranchiseHandler {
                             .flatMap(response -> ServerResponse.status(HttpStatus.CREATED).bodyValue(response));
                 });
     }
+
+    public Mono<ServerResponse> deleteProductFromBranch(ServerRequest request){
+        Long branchId = Long.valueOf(request.pathVariable("branchId"));
+        Long productId = Long.valueOf(request.pathVariable("productId"));
+        return franchiseServicePort.deleteProductFromBranch(branchId, productId)
+                .then(ServerResponse.noContent().build());
+    }
 }

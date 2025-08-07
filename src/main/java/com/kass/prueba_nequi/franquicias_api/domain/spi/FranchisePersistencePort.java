@@ -14,4 +14,6 @@ public interface FranchisePersistencePort {
     Mono<Branch> findBranchById(Long id);
     Mono<Product> saveProduct(Product product);
     Mono<Boolean> existsProductInBranch(Long branchId, String name);
+    Mono<Product> findProductById(Long productId);
+    Mono<Void> deleteProduct(Long productId);
 }

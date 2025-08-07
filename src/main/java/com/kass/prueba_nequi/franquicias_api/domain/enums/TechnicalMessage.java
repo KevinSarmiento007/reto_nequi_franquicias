@@ -20,6 +20,8 @@ public enum TechnicalMessage {
     BRANCH_ALREADY_EXISTS("400","Branch already exists." ,"" ),
     PRODUCT_ALREADY_EXISTS("400","Product already exists." ,"" ),
     FRANCHISE_NOT_FOUND("404","Franchise not found." ,"" ),
+    PRODUCT_NOT_FOUND("404","Product not found." ,"" ),
+    PRODUCT_NOT_BELONG("400","Product does not belong to branch." ,"" ),
     BRANCH_NOT_FOUND("404","Branch not found." ,"" );
 
     private final String code;

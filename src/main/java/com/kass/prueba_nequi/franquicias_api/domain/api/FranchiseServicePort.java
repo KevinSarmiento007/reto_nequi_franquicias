@@ -9,4 +9,5 @@ public interface FranchiseServicePort {
     Mono<Franchise> createFranchise(Franchise franchise);
     Mono<Branch> addBranchToFranchise(Long franchiseId, Branch branch);
     Mono<Product> addProductToBranch(Long branchId, Product product);
+    Mono<Void> deleteProductFromBranch(Long branchId, Long productId);
 }

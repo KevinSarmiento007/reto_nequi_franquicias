@@ -70,4 +70,14 @@ public class FranchisePersistenceAdapter implements FranchisePersistencePort {
     public Mono<Boolean> existsProductInBranch(Long branchId, String name) {
         return productRepository.findByBranchIdAndName(branchId, name).hasElement();
     }
+
+    @Override
+    public Mono<Product> findProductById(Long productId) {
+        return productRepository.findById(productId).map(productEntityMapper::toModel);
+    }
+
+    @Override
+    public Mono<Void> deleteProduct(Long productId) {
+        return productRepository.deleteById(productId);
+    }
 }
