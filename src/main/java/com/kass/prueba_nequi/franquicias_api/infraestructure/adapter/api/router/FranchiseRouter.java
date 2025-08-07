@@ -22,6 +22,7 @@ public class FranchiseRouter {
                         handler::addProductToBranch)
                 .andRoute(DELETE("/branches/{branchId}/products/{productId}"), handler::deleteProductFromBranch)
                 .andRoute(PUT("/branches/products"), handler::updateProductStock)
-                .andRoute(GET("/franchises/{franchiseId}/top-products"), handler::getTopProductsPerBranch);
+                .andRoute(GET("/franchises/{franchiseId}/top-products"), handler::getTopProductsPerBranch)
+                .andRoute(PUT("/franchises"), handler::updateFranchiseName);
     }
 }

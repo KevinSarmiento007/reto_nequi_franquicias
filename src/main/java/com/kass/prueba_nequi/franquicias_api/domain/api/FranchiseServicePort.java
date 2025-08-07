@@ -13,4 +13,5 @@ public interface FranchiseServicePort {
     Mono<Void> deleteProductFromBranch(Long branchId, Long productId);
     Mono<Product> updateProductStock(Long branchId, Long productId, Integer newStock);
     Flux<Branch> getTopProductsPerBranch(Long franchiseId);
+    Mono<Franchise> updateFranchiseName(Long franchiseId, String newName);
 }

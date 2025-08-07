@@ -102,4 +102,19 @@ public class FranchiseHandler {
                 .collectList()
                 .flatMap(response -> ServerResponse.ok().bodyValue(response));
     }
+
+    public Mono<ServerResponse> updateFranchiseName(ServerRequest request){
+        return request.bodyToMono(UpdatedFranchiseNameRequest.class)
+                .flatMap(updatedFranchiseNameRequest -> {
+                    var violations = validator.validate(updatedFranchiseNameRequest);
+                    if (!violations.isEmpty()) {
+                        String errorMessage = violations.iterator().next().getMessage();
+                        return ServerResponse.badRequest().bodyValue(errorMessage);
+                    }
+                    return Mono.just(updatedFranchiseNameRequest)
+                            .flatMap(req -> franchiseServicePort.updateFranchiseName(req.franchiseId(), req.name()))
+                            .map(franchiseApiMapper::toResponse)
+                            .flatMap(response -> ServerResponse.ok().bodyValue(response));
+                });
+    }
 }
