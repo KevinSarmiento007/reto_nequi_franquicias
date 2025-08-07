@@ -126,4 +126,18 @@ public class FranchiseUseCase implements FranchiseServicePort {
                             .flatMap(branch -> franchisePersistencePort.updateBranchName(branchId, newName));
                 });
     }
+
+    @Override
+    public Mono<Product> updateProductName(Long productId, String newName) {
+        return franchisePersistencePort.findProductById(productId)
+                .switchIfEmpty(Mono.error(new BusinessException(TechnicalMessage.FRANCHISE_NOT_FOUND)))
+                .flatMap(product ->
+                        franchisePersistencePort.existsProductInBranch(product.branchId(), newName)
+                                .flatMap(exists ->{
+                                    if(exists){
+                                        return Mono.error(new BusinessException(TechnicalMessage.PRODUCT_ALREADY_EXISTS));
+                                    }
+                                    return franchisePersistencePort.updateProductName(productId, newName);
+                                }));
+    }
 }

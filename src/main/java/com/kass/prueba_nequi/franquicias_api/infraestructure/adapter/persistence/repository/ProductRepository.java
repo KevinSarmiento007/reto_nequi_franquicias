@@ -16,4 +16,8 @@ public interface ProductRepository extends ReactiveCrudRepository<ProductEntity,
 
     @Query("SELECT * FROM productos p WHERE p.sucursal_id = :branchId ORDER BY p.stock DESC LIMIT 1")
     Mono<ProductEntity> findTopProductByBranchId(@Param("branchId") Long branchId);
+
+    @Modifying
+    @Query("UPDATE productos SET nombre = :newName WHERE id = :productId")
+    Mono<Integer> updateName(@Param("productId") Long productId, @Param("newName") String newName);
 }

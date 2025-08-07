@@ -132,4 +132,19 @@ public class FranchiseHandler {
                             .flatMap(response -> ServerResponse.ok().bodyValue(response));
                 });
     }
+
+    public Mono<ServerResponse> updateProductName(ServerRequest request){
+        return request.bodyToMono(UpdateProductNameRequest.class)
+                .flatMap(body -> {
+                    var violations = validator.validate(body);
+                    if (!violations.isEmpty()) {
+                        String errorMessage = violations.iterator().next().getMessage();
+                        return ServerResponse.badRequest().bodyValue(errorMessage);
+                    }
+                    return Mono.just(body)
+                            .flatMap(newBody -> franchiseServicePort.updateProductName(newBody.productId(), newBody.name()))
+                            .map(productApiMapper::toResponse)
+                            .flatMap(response -> ServerResponse.ok().bodyValue(response));
+                });
+    }
 }

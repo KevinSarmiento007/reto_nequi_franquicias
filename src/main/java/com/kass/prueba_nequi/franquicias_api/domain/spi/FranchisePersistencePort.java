@@ -22,4 +22,5 @@ public interface FranchisePersistencePort {
     Mono<Product> findTopProductByBranchId(Long branchId);
     Mono<Franchise> updateFranchiseName(Long franchiseId, String newName);
     Mono<Branch> updateBranchName(Long branchId, String newName);
+    Mono<Product> updateProductName(Long productId, String newName);
 }
