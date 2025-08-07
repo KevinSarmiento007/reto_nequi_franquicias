@@ -3,8 +3,10 @@ package com.kass.prueba_nequi.franquicias_api.infraestructure.adapter.api.handle
 import com.kass.prueba_nequi.franquicias_api.domain.api.FranchiseServicePort;
 import com.kass.prueba_nequi.franquicias_api.infraestructure.adapter.api.dto.BranchRequest;
 import com.kass.prueba_nequi.franquicias_api.infraestructure.adapter.api.dto.FranchiseRequest;
+import com.kass.prueba_nequi.franquicias_api.infraestructure.adapter.api.dto.ProductRequest;
 import com.kass.prueba_nequi.franquicias_api.infraestructure.adapter.api.mapper.BranchApiMapper;
 import com.kass.prueba_nequi.franquicias_api.infraestructure.adapter.api.mapper.FranchiseApiMapper;
+import com.kass.prueba_nequi.franquicias_api.infraestructure.adapter.api.mapper.ProductApiMapper;
 import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,6 +22,7 @@ public class FranchiseHandler {
     private final FranchiseApiMapper franchiseApiMapper;
     private final Validator validator;
     private final BranchApiMapper branchApiMapper;
+    private final ProductApiMapper productApiMapper;
 
     public Mono<ServerResponse> createFranchise(ServerRequest request){
         return request.bodyToMono(FranchiseRequest.class)
@@ -50,6 +53,22 @@ public class FranchiseHandler {
                             .map(branchApiMapper::toDomain)
                             .flatMap(branch -> franchiseServicePort.addBranchToFranchise(branch.franchiseId(), branch))
                             .map(branchApiMapper::toResponse)
+                            .flatMap(response -> ServerResponse.status(HttpStatus.CREATED).bodyValue(response));
+                });
+    }
+
+    public Mono<ServerResponse> addProductToBranch(ServerRequest request){
+        return request.bodyToMono(ProductRequest.class)
+                .flatMap(productRequest -> {
+                    var violations = validator.validate(productRequest);
+                    if (!violations.isEmpty()) {
+                        String errorMessage = violations.iterator().next().getMessage();
+                        return ServerResponse.badRequest().bodyValue(errorMessage);
+                    }
+                    return Mono.just(productRequest)
+                            .map(productApiMapper::toDomain)
+                            .flatMap(product -> franchiseServicePort.addProductToBranch(product.branchId(), product))
+                            .map(productApiMapper::toResponse)
                             .flatMap(response -> ServerResponse.status(HttpStatus.CREATED).bodyValue(response));
                 });
     }

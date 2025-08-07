@@ -2,13 +2,17 @@ package com.kass.prueba_nequi.franquicias_api.infraestructure.adapter.persistenc
 
 import com.kass.prueba_nequi.franquicias_api.domain.model.Branch;
 import com.kass.prueba_nequi.franquicias_api.domain.model.Franchise;
+import com.kass.prueba_nequi.franquicias_api.domain.model.Product;
 import com.kass.prueba_nequi.franquicias_api.domain.spi.FranchisePersistencePort;
 import com.kass.prueba_nequi.franquicias_api.infraestructure.adapter.persistence.entity.BranchEntity;
 import com.kass.prueba_nequi.franquicias_api.infraestructure.adapter.persistence.entity.FranchiseEntity;
+import com.kass.prueba_nequi.franquicias_api.infraestructure.adapter.persistence.entity.ProductEntity;
 import com.kass.prueba_nequi.franquicias_api.infraestructure.adapter.persistence.mapper.BranchEntityMapper;
 import com.kass.prueba_nequi.franquicias_api.infraestructure.adapter.persistence.mapper.FranchiseEntityMapper;
+import com.kass.prueba_nequi.franquicias_api.infraestructure.adapter.persistence.mapper.ProductEntityMapper;
 import com.kass.prueba_nequi.franquicias_api.infraestructure.adapter.persistence.repository.BranchRepository;
 import com.kass.prueba_nequi.franquicias_api.infraestructure.adapter.persistence.repository.FranchiseRepository;
+import com.kass.prueba_nequi.franquicias_api.infraestructure.adapter.persistence.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
@@ -21,6 +25,8 @@ public class FranchisePersistenceAdapter implements FranchisePersistencePort {
     private final FranchiseEntityMapper franchiseEntityMapper;
     private final BranchRepository branchRepository;
     private final BranchEntityMapper branchEntityMapper;
+    private final ProductRepository productRepository;
+    private final ProductEntityMapper productEntityMapper;
 
     @Override
     public Mono<Franchise> saveFranchise(Franchise franchise) {
@@ -47,5 +53,21 @@ public class FranchisePersistenceAdapter implements FranchisePersistencePort {
     @Override
     public Mono<Boolean> existsBranchByName(String name) {
         return branchRepository.findByName(name).hasElement();
+    }
+
+    @Override
+    public Mono<Branch> findBranchById(Long id) {
+        return branchRepository.findById(id).map(branchEntityMapper::toModel);
+    }
+
+    @Override
+    public Mono<Product> saveProduct(Product product) {
+        ProductEntity entity = productEntityMapper.toEntity(product);
+        return productRepository.save(entity).map(productEntityMapper::toModel);
+    }
+
+    @Override
+    public Mono<Boolean> existsProductInBranch(Long branchId, String name) {
+        return productRepository.findByBranchIdAndName(branchId, name).hasElement();
     }
 }

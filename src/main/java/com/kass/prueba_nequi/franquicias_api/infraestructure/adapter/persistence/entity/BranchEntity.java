@@ -16,4 +16,28 @@ public class BranchEntity {
 
     @Column("nombre")
     private String name;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getFranchiseId() {
+        return franchiseId;
+    }
+
+    public void setFranchiseId(Long franchiseId) {
+        this.franchiseId = franchiseId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 }

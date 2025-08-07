@@ -5,6 +5,7 @@ import com.kass.prueba_nequi.franquicias_api.domain.enums.TechnicalMessage;
 import com.kass.prueba_nequi.franquicias_api.domain.exceptions.BusinessException;
 import com.kass.prueba_nequi.franquicias_api.domain.model.Branch;
 import com.kass.prueba_nequi.franquicias_api.domain.model.Franchise;
+import com.kass.prueba_nequi.franquicias_api.domain.model.Product;
 import com.kass.prueba_nequi.franquicias_api.domain.spi.FranchisePersistencePort;
 import reactor.core.publisher.Mono;
 
@@ -40,5 +41,19 @@ public class FranchiseUseCase implements FranchiseServicePort {
                                     return franchisePersistencePort.saveBranch(new Branch(null, branch.name(), franchiseId, null));
                                 })
                 );
+    }
+
+    @Override
+    public Mono<Product> addProductToBranch(Long branchId, Product product) {
+        return franchisePersistencePort.findBranchById(branchId)
+                .switchIfEmpty(Mono.error(new BusinessException(TechnicalMessage.BRANCH_NOT_FOUND)))
+                .flatMap(branch ->
+                        franchisePersistencePort.existsProductInBranch(branchId, product.name())
+                                .flatMap(exists -> {
+                                    if(exists){
+                                        return Mono.error(new BusinessException(TechnicalMessage.PRODUCT_ALREADY_EXISTS));
+                                    }
+                                    return franchisePersistencePort.saveProduct(product);
+                                }));
     }
 }

@@ -17,6 +17,8 @@ public class FranchiseRouter {
     public RouterFunction<ServerResponse> franchiseRoutes(FranchiseHandler handler){
         return route(POST("/franchises").and(accept(MediaType.APPLICATION_JSON)), handler::createFranchise)
                 .andRoute(POST("/franchises/branches").and(accept(MediaType.APPLICATION_JSON)),
-                        handler::addBranchToFranchise);
+                        handler::addBranchToFranchise)
+                .andRoute(POST("/branches/products").and(accept(MediaType.APPLICATION_JSON)),
+                        handler::addProductToBranch);
     }
 }

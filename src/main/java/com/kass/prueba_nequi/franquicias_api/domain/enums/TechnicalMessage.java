@@ -18,7 +18,9 @@ public enum TechnicalMessage {
     ADAPTER_RESPONSE_NOT_FOUND("404-0", "invalid email, please verify", ""),
     FRANCHISE_ALREADY_EXISTS("400","Franchise already exists." ,"" ),
     BRANCH_ALREADY_EXISTS("400","Branch already exists." ,"" ),
-    FRANCHISE_NOT_FOUND("404","Franchise not found." ,"" );
+    PRODUCT_ALREADY_EXISTS("400","Product already exists." ,"" ),
+    FRANCHISE_NOT_FOUND("404","Franchise not found." ,"" ),
+    BRANCH_NOT_FOUND("404","Branch not found." ,"" );
 
     private final String code;
     private final String message;
