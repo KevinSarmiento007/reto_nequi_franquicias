@@ -117,4 +117,19 @@ public class FranchiseHandler {
                             .flatMap(response -> ServerResponse.ok().bodyValue(response));
                 });
     }
+
+    public Mono<ServerResponse> updateBranchName(ServerRequest request){
+        return request.bodyToMono(UpdateBranchNameRequest.class)
+                .flatMap(body -> {
+                    var violations = validator.validate(body);
+                    if (!violations.isEmpty()) {
+                        String errorMessage = violations.iterator().next().getMessage();
+                        return ServerResponse.badRequest().bodyValue(errorMessage);
+                    }
+                    return Mono.just(body)
+                            .flatMap(newBody -> franchiseServicePort.updateBranchName(newBody.branchId(), newBody.name()))
+                            .map(branchApiMapper::toResponse)
+                            .flatMap(response -> ServerResponse.ok().bodyValue(response));
+                });
+    }
 }

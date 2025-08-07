@@ -117,4 +117,16 @@ public class FranchisePersistenceAdapter implements FranchisePersistencePort {
                 })
                 .map(franchiseEntityMapper::toModel);
     }
+
+    @Override
+    public Mono<Branch> updateBranchName(Long branchId, String newName) {
+        return branchRepository.updateName(newName, branchId)
+                .flatMap(updatedRows -> {
+                    if(updatedRows > 0){
+                        return branchRepository.findById(branchId);
+                    }
+                    return Mono.empty();
+                })
+                .map(branchEntityMapper::toModel);
+    }
 }

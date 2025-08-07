@@ -21,4 +21,5 @@ public interface FranchisePersistencePort {
     Flux<Branch> findBranchesByFranchiseId(Long franchiseId);
     Mono<Product> findTopProductByBranchId(Long branchId);
     Mono<Franchise> updateFranchiseName(Long franchiseId, String newName);
+    Mono<Branch> updateBranchName(Long branchId, String newName);
 }
