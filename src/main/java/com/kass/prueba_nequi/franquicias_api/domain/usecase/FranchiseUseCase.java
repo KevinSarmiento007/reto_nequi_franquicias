@@ -71,4 +71,19 @@ public class FranchiseUseCase implements FranchiseServicePort {
                                     return franchisePersistencePort.deleteProduct(productId);
                                 }));
     }
+
+    @Override
+    public Mono<Product> updateProductStock(Long branchId, Long productId, Integer newStock) {
+        return franchisePersistencePort.findBranchById(branchId)
+                .switchIfEmpty(Mono.error(new BusinessException(TechnicalMessage.BRANCH_NOT_FOUND)))
+                .flatMap(branch ->
+                        franchisePersistencePort.findProductById(productId)
+                                .switchIfEmpty(Mono.error(new BusinessException(TechnicalMessage.PRODUCT_NOT_FOUND)))
+                                .flatMap(product -> {
+                                    if(!product.branchId().equals(branchId)){
+                                        return Mono.error(new BusinessException(TechnicalMessage.PRODUCT_NOT_BELONG));
+                                    }
+                                    return franchisePersistencePort.updateProductStock(productId, newStock);
+                                }));
+    }
 }

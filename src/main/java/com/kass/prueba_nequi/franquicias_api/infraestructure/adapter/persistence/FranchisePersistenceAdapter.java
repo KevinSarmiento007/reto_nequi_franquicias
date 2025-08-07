@@ -80,4 +80,16 @@ public class FranchisePersistenceAdapter implements FranchisePersistencePort {
     public Mono<Void> deleteProduct(Long productId) {
         return productRepository.deleteById(productId);
     }
+
+    @Override
+    public Mono<Product> updateProductStock(Long productId, Integer newStock) {
+        return productRepository.updateStock(productId, newStock)
+                .flatMap(rowsUpdated ->{
+                    if(rowsUpdated > 0){
+                        return productRepository.findById(productId);
+                    }
+                    return Mono.empty();
+                })
+                .map(productEntityMapper::toModel);
+    }
 }

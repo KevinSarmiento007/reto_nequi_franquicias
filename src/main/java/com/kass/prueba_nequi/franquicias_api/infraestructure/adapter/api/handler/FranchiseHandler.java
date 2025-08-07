@@ -4,6 +4,7 @@ import com.kass.prueba_nequi.franquicias_api.domain.api.FranchiseServicePort;
 import com.kass.prueba_nequi.franquicias_api.infraestructure.adapter.api.dto.BranchRequest;
 import com.kass.prueba_nequi.franquicias_api.infraestructure.adapter.api.dto.FranchiseRequest;
 import com.kass.prueba_nequi.franquicias_api.infraestructure.adapter.api.dto.ProductRequest;
+import com.kass.prueba_nequi.franquicias_api.infraestructure.adapter.api.dto.UpdateProductStockRequest;
 import com.kass.prueba_nequi.franquicias_api.infraestructure.adapter.api.mapper.BranchApiMapper;
 import com.kass.prueba_nequi.franquicias_api.infraestructure.adapter.api.mapper.FranchiseApiMapper;
 import com.kass.prueba_nequi.franquicias_api.infraestructure.adapter.api.mapper.ProductApiMapper;
@@ -78,5 +79,21 @@ public class FranchiseHandler {
         Long productId = Long.valueOf(request.pathVariable("productId"));
         return franchiseServicePort.deleteProductFromBranch(branchId, productId)
                 .then(ServerResponse.noContent().build());
+    }
+
+    public Mono<ServerResponse> updateProductStock(ServerRequest request){
+        return request.bodyToMono(UpdateProductStockRequest.class)
+                .flatMap(updateProductStockRequest -> {
+                    var violations = validator.validate(updateProductStockRequest);
+                    if (!violations.isEmpty()) {
+                        String errorMessage = violations.iterator().next().getMessage();
+                        return ServerResponse.badRequest().bodyValue(errorMessage);
+                    }
+                    return Mono.just(updateProductStockRequest)
+                            .flatMap(updateRequest ->
+                                    franchiseServicePort.updateProductStock(updateRequest.branchId(), updateRequest.productId(), updateRequest.stock()))
+                            .map(productApiMapper::toResponse)
+                            .flatMap(response -> ServerResponse.ok().bodyValue(response));
+                });
     }
 }
