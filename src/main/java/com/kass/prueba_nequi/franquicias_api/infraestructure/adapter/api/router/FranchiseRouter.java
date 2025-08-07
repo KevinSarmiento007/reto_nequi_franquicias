@@ -21,6 +21,7 @@ public class FranchiseRouter {
                 .andRoute(POST("/branches/products").and(accept(MediaType.APPLICATION_JSON)),
                         handler::addProductToBranch)
                 .andRoute(DELETE("/branches/{branchId}/products/{productId}"), handler::deleteProductFromBranch)
-                .andRoute(PUT("/branches/products"), handler::updateProductStock);
+                .andRoute(PUT("/branches/products"), handler::updateProductStock)
+                .andRoute(GET("/franchises/{franchiseId}/top-products"), handler::getTopProductsPerBranch);
     }
 }

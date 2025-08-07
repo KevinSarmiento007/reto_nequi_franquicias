@@ -15,6 +15,7 @@ import com.kass.prueba_nequi.franquicias_api.infraestructure.adapter.persistence
 import com.kass.prueba_nequi.franquicias_api.infraestructure.adapter.persistence.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Component
@@ -90,6 +91,18 @@ public class FranchisePersistenceAdapter implements FranchisePersistencePort {
                     }
                     return Mono.empty();
                 })
+                .map(productEntityMapper::toModel);
+    }
+
+    @Override
+    public Flux<Branch> findBranchesByFranchiseId(Long franchiseId) {
+        return branchRepository.findByFranchiseId(franchiseId)
+                .map(branchEntityMapper::toModel);
+    }
+
+    @Override
+    public Mono<Product> findTopProductByBranchId(Long branchId) {
+        return productRepository.findTopProductByBranchId(branchId)
                 .map(productEntityMapper::toModel);
     }
 }

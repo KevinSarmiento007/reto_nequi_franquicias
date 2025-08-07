@@ -1,10 +1,7 @@
 package com.kass.prueba_nequi.franquicias_api.infraestructure.adapter.api.handler;
 
 import com.kass.prueba_nequi.franquicias_api.domain.api.FranchiseServicePort;
-import com.kass.prueba_nequi.franquicias_api.infraestructure.adapter.api.dto.BranchRequest;
-import com.kass.prueba_nequi.franquicias_api.infraestructure.adapter.api.dto.FranchiseRequest;
-import com.kass.prueba_nequi.franquicias_api.infraestructure.adapter.api.dto.ProductRequest;
-import com.kass.prueba_nequi.franquicias_api.infraestructure.adapter.api.dto.UpdateProductStockRequest;
+import com.kass.prueba_nequi.franquicias_api.infraestructure.adapter.api.dto.*;
 import com.kass.prueba_nequi.franquicias_api.infraestructure.adapter.api.mapper.BranchApiMapper;
 import com.kass.prueba_nequi.franquicias_api.infraestructure.adapter.api.mapper.FranchiseApiMapper;
 import com.kass.prueba_nequi.franquicias_api.infraestructure.adapter.api.mapper.ProductApiMapper;
@@ -95,5 +92,14 @@ public class FranchiseHandler {
                             .map(productApiMapper::toResponse)
                             .flatMap(response -> ServerResponse.ok().bodyValue(response));
                 });
+    }
+
+    public Mono<ServerResponse> getTopProductsPerBranch(ServerRequest request){
+        Long franchiseId = Long.valueOf(request.pathVariable("franchiseId"));
+        return franchiseServicePort.getTopProductsPerBranch(franchiseId)
+                .map(branch -> new BranchWithTopProductResponse(branch.id(), branch.name(), branch.products()
+                        .stream().map(productApiMapper::toResponse).toList()))
+                .collectList()
+                .flatMap(response -> ServerResponse.ok().bodyValue(response));
     }
 }

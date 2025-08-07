@@ -7,7 +7,10 @@ import com.kass.prueba_nequi.franquicias_api.domain.model.Branch;
 import com.kass.prueba_nequi.franquicias_api.domain.model.Franchise;
 import com.kass.prueba_nequi.franquicias_api.domain.model.Product;
 import com.kass.prueba_nequi.franquicias_api.domain.spi.FranchisePersistencePort;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.util.List;
 
 public class FranchiseUseCase implements FranchiseServicePort {
 
@@ -85,5 +88,16 @@ public class FranchiseUseCase implements FranchiseServicePort {
                                     }
                                     return franchisePersistencePort.updateProductStock(productId, newStock);
                                 }));
+    }
+
+    @Override
+    public Flux<Branch> getTopProductsPerBranch(Long franchiseId) {
+        return franchisePersistencePort.findFranchiseById(franchiseId)
+                .switchIfEmpty(Mono.error(new BusinessException(TechnicalMessage.FRANCHISE_NOT_FOUND)))
+                .flatMapMany(franchise -> franchisePersistencePort.findBranchesByFranchiseId(franchiseId)
+                        .flatMap(branch ->
+                                franchisePersistencePort.findTopProductByBranchId(branch.id())
+                                        .map(product -> new Branch(branch.id(), branch.name(), branch.franchiseId(), List.of(product)))
+                                        .defaultIfEmpty(new Branch(branch.id(), branch.name(), branch.franchiseId(), List.of()))));
     }
 }
