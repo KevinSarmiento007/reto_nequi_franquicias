@@ -16,7 +16,9 @@ public enum TechnicalMessage {
     UNSUPPORTED_OPERATION("501", "Method not supported, please try again", ""),
     USER_CREATED("201", "User created successfully", ""),
     ADAPTER_RESPONSE_NOT_FOUND("404-0", "invalid email, please verify", ""),
-    FRANCHISE_ALREADY_EXISTS("400","Franchise already exists." ,"" );
+    FRANCHISE_ALREADY_EXISTS("400","Franchise already exists." ,"" ),
+    BRANCH_ALREADY_EXISTS("400","Branch already exists." ,"" ),
+    FRANCHISE_NOT_FOUND("404","Franchise not found." ,"" );
 
     private final String code;
     private final String message;
