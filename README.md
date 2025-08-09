@@ -149,3 +149,8 @@ CREATE TABLE `sucursales` (
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 ```
+
+```bash
+La APP ahora está completamente desplegada en AWS, por lo tanto se puede consultar a traves del APIGATEWAY
+URL-> https://pmqbgb2mj6.execute-api.us-east-1.amazonaws.com/
+```

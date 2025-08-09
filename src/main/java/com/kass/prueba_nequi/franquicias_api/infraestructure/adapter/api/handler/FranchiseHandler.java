@@ -147,4 +147,8 @@ public class FranchiseHandler {
                             .flatMap(response -> ServerResponse.ok().bodyValue(response));
                 });
     }
+
+    public Mono<ServerResponse> test(ServerRequest request){
+        return ServerResponse.ok().bodyValue("Pong.");
+    }
 }
