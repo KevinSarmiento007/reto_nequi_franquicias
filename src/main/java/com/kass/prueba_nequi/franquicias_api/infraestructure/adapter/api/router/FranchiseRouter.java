@@ -241,6 +241,25 @@ public class FranchiseRouter {
                                     @ApiResponse(responseCode = "500", description = "Internal server error")
                             }
                     )
+            ),
+            @RouterOperation(
+                    path = "/ping",
+                    produces = MediaType.TEXT_PLAIN_VALUE,
+                    method = RequestMethod.GET,
+                    beanClass = FranchiseHandler.class,
+                    beanMethod = "test",
+                    operation = @Operation(
+                            operationId = "ping",
+                            summary = "Health check endpoint",
+                            description = "Returns pong if the service is alive",
+                            responses = {
+                                    @ApiResponse(
+                                            responseCode = "200",
+                                            description = "Service is alive",
+                                            content = @Content(mediaType = MediaType.TEXT_PLAIN_VALUE)
+                                    )
+                            }
+                    )
             )
     })
     @Bean
