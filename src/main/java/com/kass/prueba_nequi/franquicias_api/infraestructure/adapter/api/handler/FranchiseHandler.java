@@ -1,6 +1,7 @@
 package com.kass.prueba_nequi.franquicias_api.infraestructure.adapter.api.handler;
 
 import com.kass.prueba_nequi.franquicias_api.domain.api.FranchiseServicePort;
+import com.kass.prueba_nequi.franquicias_api.domain.exceptions.BusinessException;
 import com.kass.prueba_nequi.franquicias_api.infraestructure.adapter.api.dto.*;
 import com.kass.prueba_nequi.franquicias_api.infraestructure.adapter.api.mapper.BranchApiMapper;
 import com.kass.prueba_nequi.franquicias_api.infraestructure.adapter.api.mapper.FranchiseApiMapper;
@@ -34,7 +35,9 @@ public class FranchiseHandler {
                             .map(franchiseApiMapper::toDomain)
                             .flatMap(franchiseServicePort::createFranchise)
                             .map(franchiseApiMapper::toResponse)
-                            .flatMap(response -> ServerResponse.status(HttpStatus.CREATED).bodyValue(response));
+                            .flatMap(response -> ServerResponse.status(HttpStatus.CREATED).bodyValue(response))
+                            .onErrorResume(BusinessException.class, ex ->
+                                    ServerResponse.status(HttpStatus.BAD_REQUEST).bodyValue(ex.getMessage()));
                 });
 
     }
