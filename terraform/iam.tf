@@ -1,19 +1,3 @@
-data "aws_iam_policy_document" "ecs_task_assume" {
-  statement {
-    principals {
-      type        = "Service"
-      identifiers = ["ecs-tasks.amazonaws.com"]
-    }
-    actions = ["sts:AssumeRole"]
-  }
-}
-
-resource "aws_iam_role" "ecs_task_exec" {
-  name               = "${var.project_name}-task-exec-role"
-  assume_role_policy = data.aws_iam_policy_document.ecs_task_assume.json
-}
-
-resource "aws_iam_role_policy_attachment" "ecs_task_exec_policy" {
-  role       = aws_iam_role.ecs_task_exec.name
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:d2417541a9dd7337720ddc56a8cecbc8639aeae9dcb5fa065716731f78502e14
+size 604

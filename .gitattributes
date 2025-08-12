@@ -1,3 +1,5 @@
-/gradlew text eol=lf
+estoy subiendo /gradlew text eol=lf
 *.bat text eol=crlf
 *.jar binary
+*.psd filter=lfs diff=lfs merge=lfs -text
+*.tf filter=lfs diff=lfs merge=lfs -text
